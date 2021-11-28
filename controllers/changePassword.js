@@ -33,7 +33,7 @@ export const changePassword = async (req, res) => {
         new: true,
       }
     );
-    res.status(200).json({ result: result });
+    res.status(200).json({ result: result, message: "Success" });
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });
   }

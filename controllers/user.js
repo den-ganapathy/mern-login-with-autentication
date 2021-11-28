@@ -3,15 +3,15 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const signin = async (req, res) => {
-  const { email, password } = req.body;
+  const { loginEmail, loginPassword } = req.body;
 
   try {
-    const existingUser = await User.find({ email });
+    const existingUser = await User.find({ email: loginEmail });
     if (!existingUser.length)
-      return res.status(404).json({ message: "user does not exist" });
+      return res.status(400).json({ message: "user does not exist" });
 
     const isPasswordCorrect = await bcrypt.compare(
-      password,
+      loginPassword,
       existingUser[0].password
     );
 
@@ -30,19 +30,22 @@ export const signin = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { email, password, confirmpassword, firstname, lastname } = req.body;
+  const { email, password, confirmpassword, username } = req.body;
   try {
     const existingUser = await User.find({ email });
     if (existingUser.length)
       return res.status(400).json({ message: "user already exists" });
+    if (password.length < 6)
+      return res
+        .status(400)
+        .json({ message: "Password length should be 6 characters or more" });
     if (password !== confirmpassword)
       return res.status(400).json({ message: "password mismatch" });
     const hashedPassword = await bcrypt.hash(password, 12);
     const result = await User.create({
       email,
       password: hashedPassword,
-      firstname,
-      lastname,
+      username,
     });
 
     const token = jwt.sign(

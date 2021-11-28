@@ -14,7 +14,7 @@ const uri =
 mongoose
   .connect(uri, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() =>
-    app.listen(process.env.PORT || 8082, () => {
+    app.listen(process.env.PORT || 8080, () => {
       console.log("listening for request");
     })
   )
