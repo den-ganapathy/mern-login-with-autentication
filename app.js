@@ -2,15 +2,16 @@ import express from "express";
 import mongoose from "mongoose";
 import bodyparser from "body-parser";
 import cors from "cors";
+import dotenv from "dotenv";
 const app = express();
 import userRoutes from "./routes/users.js";
+dotenv.config();
 
 app.use(bodyparser.json());
 app.use(cors());
 app.use("/user", userRoutes);
 
-const uri =
-  "mongodb+srv://den:den123@cluster0.rn771.mongodb.net/login-authentication?retryWrites=true&w=majority";
+const uri = process.env.MONGO_URI;
 mongoose
   .connect(uri, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() =>
